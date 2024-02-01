@@ -1,0 +1,237 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Hacking Talents todo list",
+    "description": "The todo list should implement the following features: <ul><li> <code>POST</code> - Add a new item</li><br>  <li> <code>GET</code> - List all items</li><br>  <li> <code>GET</code> - Show a single item</li><br>  <li> <code>PATCH</code> - Check an item</li><br>  <li> <code>DELETE</code> - Delete an item</li></ul>",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/todo": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Returns all todos",
+        "description": "Returns all todos",
+        "responses": {
+          "200": {
+            "description": "**OK**.",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "type": "object"
+                      },
+                      {
+                        "$ref": "#/components/schemas/todo"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Add a new item",
+        "description": "Add a new item",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "**Description** for todo."
+                  },
+                  "due-date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "**Due date** for todo."
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "description": "**Priority** for todo."
+                  }
+                },
+                "required": [
+                  "id",
+                  "description"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/201"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/todo/{id}": {
+      "get": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Returns a single todo",
+        "description": "Returns a single todo for an id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "**OK**.",
+            "content": {
+              "application/json;charset=UTF-8": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "$ref": "#/components/schemas/todo"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Check a todo",
+        "description": "Set the done value of an item to true",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "todo"
+        ],
+        "summary": "Delete an item",
+        "description": "Delete an item forever",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "$ref": "#/components/responses/204"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "201": {
+        "description": "**Created**.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/todo"
+            }
+          }
+        }
+      },
+      "204": {
+        "description": "**No Content**."
+      },
+      "400": {
+        "description": "**Bad Request**."
+      },
+      "404": {
+        "description": "**Not Found**."
+      }
+    },
+    "schemas": {
+      "todo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "**Primary key**"
+          },
+          "description": {
+            "type": "string",
+            "description": "**Description**"
+          },
+          "due-date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "**Due date**"
+          },
+          "done": {
+            "type": "boolean",
+            "description": "**Done**"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "**Priority**"
+          }
+        },
+        "required": [
+          "id",
+          "description",
+          "done"
+        ]
+      }
+    }
+  }
+}
